@@ -21,7 +21,12 @@ pkg_base, pkg_dir = get_package_paths('shapely')
 if compat.is_win:
     binaries = []
     lib_dir = os.path.join(pkg_dir, 'DLLs')
-    binaries += [(os.path.join(lib_dir, f), '') for f in os.listdir(lib_dir)]
+    if os.path.isdir(lib_dir):
+        binaries += [(os.path.join(lib_dir, f), '') for f in os.listdir(lib_dir)]
+    else:
+        # conda-forge package
+        lib_dir = os.path.join(pkg_dir, '..', '..', '..', '..', 'Library', 'bin')
+        binaries += [(os.path.join(lib_dir, f), '') for f in ['geos_c.dll', 'geos.dll']]
 elif compat.is_linux:
     binaries = []
     lib_dir = os.path.join(pkg_dir, '.libs')
