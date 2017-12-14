@@ -9,21 +9,26 @@
 
 import os
 
-from PyInstaller.utils.hooks import get_package_paths
-from PyInstaller.utils.hooks import is_module_satisfies
-from PyInstaller import compat
+from PyInstaller.utils.hooks import get_package_paths, is_module_satisfies
+from PyInstaller.compat import is_win, is_linux, is_conda, base_prefix
 
 # Necessary when using the vectorized subpackage
 hiddenimports = ['shapely.prepared']
 
 pkg_base, pkg_dir = get_package_paths('shapely')
 
-if compat.is_win:
-    binaries = []
-    lib_dir = os.path.join(pkg_dir, 'DLLs')
-    binaries += [(os.path.join(lib_dir, f), '') for f in os.listdir(lib_dir)]
-elif compat.is_linux:
-    binaries = []
+binaries = []
+if is_win:
+    if is_conda:
+        lib_dir = os.path.join(base_prefix, 'Library', 'bin')
+    else:
+        lib_dir = os.path.join(pkg_dir, 'DLLs')
+    dll_files = ['geos_c.dll', 'geos.dll']
+    for f in dll_files:
+        dll_path = os.path.join(lib_dir, f)
+        if os.path.isfile(f):
+            binaries.append((dll_path, ''))
+elif is_linux:
     lib_dir = os.path.join(pkg_dir, '.libs')
     dest_dir = os.path.join('shapely', '.libs')
 

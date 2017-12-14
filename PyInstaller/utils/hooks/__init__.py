@@ -16,7 +16,7 @@ import textwrap
 import re
 
 from ...compat import base_prefix, exec_command_stdout, exec_python, \
-    is_darwin, is_py2, is_py3, is_venv, string_types, open_file, \
+    is_darwin, is_py2, is_py3, is_venv, is_conda, string_types, open_file, \
     EXTENSION_SUFFIXES
 from ... import HOMEPATH
 from ... import log as logging
